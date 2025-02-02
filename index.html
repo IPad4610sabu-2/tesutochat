@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Chat App</title>
+<script
+				src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+	// jQueryライブラリを使用します。このスクリプトタグはHTMLページに埋め込むためのものです。
+	$(document).ready(function() {
+		// ドキュメント（ページ）が読み込まれ、準備ができたら以下のコードを実行します。
+
+		$("#sendMessage").click(function() {
+			// IDが"sendMessage"のHTML要素（ボタンなど）がクリックされたときに、以下のコードを実行します。
+
+			let message = $("#message").val();
+			// IDが"message"のHTML要素（テキストフィールドなど）から値を取得し、それを変数"message"に代入します。
+
+			$.post("Chat", {
+				message : message
+			});
+			// "Chat"というエンドポイントに対してPOSTリクエストを送信します。このリクエストのボディには、先ほど取得した"message"の値が含まれます。
+
+			$("#message").val("");
+			// メッセージを送信した後、IDが"message"のHTML要素の値を空にします（テキストフィールドをクリアします）。
+		});
+
+		setInterval(function() {
+			// 指定した時間間隔（この場合は2000ミリ秒、つまり2秒）ごとに、以下のコードを実行します。
+
+			$.get("Chat", function(data, status) {
+				// "Chat"というエンドポイントからGETリクエストを送信し、レスポンスが返ってきたら以下のコードを実行します。
+				// "data"はサーバーから返されたデータ、"status"はリクエストのステータス（"success"、"notmodified"など）です。
+
+				$("#chatBox").html(data);
+				// IDが"chatBox"のHTML要素（テキストエリアなど）の内容を、サーバーから返されたデータ（"data"）で更新します。
+			});
+		}, 2000);
+		// setIntervalの第2引数は、指定したコードを実行する時間間隔（ミリ秒）です。この場合は2000ミリ秒、つまり2秒です。
+	});
+</script>
+
+</head>
+<body>
+				<textarea id="chatBox" readonly rows="10" cols="30"></textarea>
+				<br />
+				<input type="text" id="message">
+				<button id="sendMessage">Send</button>
+</body>
+</html>
